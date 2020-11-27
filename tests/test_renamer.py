@@ -13,16 +13,16 @@ files_names = [
 
 @pytest.fixture
 def create_test_files(scope="function"):
-    try:
-        os.mkdir("testfiles")
-    except OSError as e:
-        print("Test path creation failed: " + e.strerror)
-        assert False
+    # try:
+    # os.mkdir("testfiles")
+    # except OSError as e:
+    # print("Test path creation failed: " + e.strerror)
+    # assert False
 
     print("testfiles directory created")
 
     for filename, expected in files_names:
-        print("")
+        print("TODO")
 
 
 @pytest.mark.parametrize("input,expected", [
