@@ -1,8 +1,11 @@
 import setuptools
 
-__version__ = "0.0.0" # Stops missing variable errors, gets overwritten by next call
-exec(compile(open("twitch_renamer/version.py").read(),
-    "twitch_renamer/version.py", "exec"))
+__version__ = "0.0.0"  # Stops missing variable errors, next call assigns it
+exec(compile(
+    open("twitch_renamer/version.py").read(),
+    "twitch_renamer/version.py",
+    "exec"
+))
 
 with open("README.md", "r") as readme:
     long_description = readme.read()
@@ -10,8 +13,8 @@ with open("README.md", "r") as readme:
 setuptools.setup(
     name="twitch_renamer",
     version=__version__,
-    author="Jamie Slowgrove",
-    author_email="git@jamieslowgrove.co.uk",
+    author="Richard Hancock",
+    author_email="me@richardhancock.co.uk",
     description="Twitch Renamer",
     long_description=long_description,
     long_description_content_type="text/markdown",

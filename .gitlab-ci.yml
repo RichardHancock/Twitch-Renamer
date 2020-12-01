@@ -25,7 +25,7 @@ flake8:
   before_script:
   - pip install flake8
   script:
-  - flake8 twitch_renamer/*.py
+  - flake8
 
 pytest:
   stage: test
@@ -44,12 +44,8 @@ package:
   stage: package
   artifacts:
     paths:
-    - dist/
+    - dist/*
   before_script:
-  - python -V  # Print out python version for debugging
-  - pip install virtualenv
-  - virtualenv venv
-  - source venv/bin/activate
   - pip install setuptools
   script:
   - python setup.py sdist
@@ -57,10 +53,6 @@ package:
 deploy:
   stage: deploy
   before_script:
-  - python -V  # Print out python version for debugging
-  - pip install virtualenv
-  - virtualenv venv
-  - source venv/bin/activate
   - pip install twine
   script:
   - twine upload --repository-url "http://192.168.1.100:14480" --username " " --password " " "dist/*"

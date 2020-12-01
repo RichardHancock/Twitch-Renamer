@@ -31,4 +31,4 @@ def handle_cli():
     )
     args = parser.parse_args()
 
-    return args.debug, args.path, args.skip_warn
+    return args.dry, args.path, args.skip_warn

@@ -1,3 +1,8 @@
 /.vscode
 *.pyc
 /twitch_renamer/__pycache__
+/dist
+/.pytest_cache
+__pycache__/
+*.egg-info/
+/testfiles

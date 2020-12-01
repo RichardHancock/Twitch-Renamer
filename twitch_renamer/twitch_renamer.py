@@ -3,8 +3,8 @@ import os
 import sys
 
 
-def twitch_renamer(debug, path, skip_warn=False):
-    if debug:
+def twitch_renamer(dry, path, skip_warn=False):
+    if dry:
         print(path)
         print(epoch_to_format_datetime(1598014504))
 
@@ -12,30 +12,35 @@ def twitch_renamer(debug, path, skip_warn=False):
     files = os.listdir(path)
     total_files = len(files)
 
-    if skip_warn or not query_yes_no("""Chosen path contains {0} files.\n
-    One is named {1}.\n
-    This script does not check if these files are valid to be renamed!\n
-    Continue?""".format(
-        total_files,
-        files[0]),
-        default=None
-    ):
-        print("Aborting!")
-        exit(0)
+    if not skip_warn:
+        if not query_yes_no("""
+        Chosen path contains {0} files.\n
+        One is named {1}.\n
+        This script does not check if these files are valid to be renamed!\n
+        Continue?""".format(
+            total_files,
+            files[0]),
+            default=None
+        ):
+            print("Aborting!")
+            return False
 
     success_count = total_files
 
     # Start the actual renaming (or simulate if -d is passed)
     for count, filename in enumerate(files):
 
-        if (debug):
+        if (dry):
             print(count)
             print("Origin - " + os.path.join(path, filename))
             print("Output - " + os.path.join(path, convert_filename(filename)))
             print(" ")
         else:
             try:
-                raise os.rename(os.path.join(path, convert_filename(filename)))
+                os.rename(
+                    os.path.join(path, filename),
+                    os.path.join(path, convert_filename(filename))
+                )
             except OSError as e:
                 print(
                     """ERROR: An error occurred while renaming {0}: {1}\n
@@ -53,8 +58,10 @@ def twitch_renamer(debug, path, skip_warn=False):
             success_count,
             total_files
         ))
-    else:
-        print(total_files + " files successfully renamed.")
+        return False
+
+    print("{0} files successfully renamed.".format(total_files))
+    return True
 
 
 def convert_filename(filename):
