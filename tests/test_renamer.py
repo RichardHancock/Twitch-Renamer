@@ -1,5 +1,6 @@
 import pytest
 import os
+from tempfile import TemporaryDirectory
 
 from twitch_renamer.twitch_renamer import epoch_to_format_datetime, \
     twitch_renamer
@@ -13,33 +14,23 @@ file_names = [
     ("833587200 - ---dash--it.tst", "1996-06-01 00-00 - ---dash--it.tst"),
 ]
 
-path = ".testfiles"
-
 
 @pytest.fixture
 def create_test_files(scope="function"):
-    try:
-        os.mkdir(path)
-    except OSError as e:
-        print("Test path creation failed: " + e.strerror)
-        assert False
+    with TemporaryDirectory() as path:
+        print("Creating Test Files")
+        for filename, expected in file_names:
+            try:
+                with open(os.path.join(path, filename), mode="a") as f:
+                    f.write("Test Content")
+            except OSError as e:
+                print("Test file creation failed: " + e.strerror)
+                assert False
 
-    print("'testfiles' Directory Created")
-    print("Creating Test Files")
-    for filename, expected in file_names:
-        try:
-            with open(os.path.join(path, filename), mode="a") as f:
-                f.write("Test Content")
-        except OSError as e:
-            print("Test file creation failed: " + e.strerror)
-            assert False
-
-    yield
-
-    print("Cleaning Up Test Files")
+        yield path
 
 
-def compare_test_files():
+def compare_test_files(path):
     # Check test path exists (If this fails it's probably a test setup issue)
     assert os.path.exists(path), "Test Path: {0} doesn't exist".format(path)
 
@@ -52,9 +43,9 @@ def compare_test_files():
 
 
 def test_rename_files_normal(create_test_files):
-    twitch_renamer(False, path, True)
+    twitch_renamer(False, create_test_files, True)
 
-    compare_test_files()
+    compare_test_files(create_test_files)
 
 
 @pytest.mark.parametrize("input,expected", [
