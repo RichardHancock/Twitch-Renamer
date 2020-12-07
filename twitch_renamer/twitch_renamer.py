@@ -9,7 +9,14 @@ def twitch_renamer(dry, path, skip_warn=False):
         print(epoch_to_format_datetime(1598014504))
 
     # Implement warning check here show an example file + file count
-    files = os.listdir(path)
+    raw_files = os.listdir(path)
+
+    files = []
+    # Filter out directories
+    for item in raw_files:
+        if not os.path.isdir(item):
+            files.append(item)
+
     total_files = len(files)
 
     if not skip_warn:
@@ -30,7 +37,7 @@ def twitch_renamer(dry, path, skip_warn=False):
     # Start the actual renaming (or simulate if -d is passed)
     for count, filename in enumerate(files):
 
-        if (dry):
+        if dry:
             print(count)
             print("Origin - " + os.path.join(path, filename))
             print("Output - " + os.path.join(path, convert_filename(filename)))
